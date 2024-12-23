@@ -2,26 +2,25 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Form\RegistrationFormType;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 
-class AuthController extends AbstractController
+class AuthController extends BaseController
 {
-    private $entityManager;
-    private $passwordHasher;
+    protected $entityManager;
+    protected $passwordHasher;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasher $passwordHasher)
-{
-    $this->entityManager = $entityManager;
-    $this->passwordHasher = $passwordHasher;
-}
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordHasher, SessionInterface $session)
+    {
+        parent::__construct($entityManager, $session);
+        $this->passwordHasher = $passwordHasher;
+    }
 
     /**
      * @Route("/login", name="login")
@@ -42,7 +41,7 @@ class AuthController extends AbstractController
                     'username' => $user->getUsername(),
                     'roles' => $user->getRoles(),
                 ]);
-
+                $this->addFlash('success', 'Bienvenido, '.$user->getUsername().'!');
                 return $this->redirectToRoute('home');
             }
 
@@ -58,6 +57,7 @@ class AuthController extends AbstractController
     public function logout(SessionInterface $session): Response
     {
         $session->invalidate(); // Elimina la sesión del usuario
+        $this->addFlash('success', 'Has cerrado sesión.');
         return $this->redirectToRoute('login');
     }
 
@@ -65,10 +65,14 @@ class AuthController extends AbstractController
      * @Route("/register", name="register")
      */
     public function register(Request $request)
-    {
+    {   
+        $user = $this->getUser();
+        if ($user) {
+            return $this->redirectToRoute('home');
+        }
         // Creamos una nueva instancia de User
         $user = new User();
-        
+
         // Creamos el formulario para el registro
         $form = $this->createForm(RegistrationFormType::class, $user);
 
@@ -77,8 +81,7 @@ class AuthController extends AbstractController
 
         // Si el formulario es válido y se envía
         if ($form->isSubmitted() && $form->isValid()) {
-            // Encriptamos la contraseña
-            $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword()); // Cambié el método de encodePassword a hashPassword
+            $hashedPassword = $this->passwordHasher->encodePassword($user, $user->getPassword()); // Cambié el método de encodePassword a hashPassword
             $user->setPassword($hashedPassword);
             $user->setRoles(['ROLE_USER']); // Asignamos el rol de usuario
 
@@ -90,7 +93,6 @@ class AuthController extends AbstractController
             return $this->redirectToRoute('login');
         }
 
-        // Renderizamos la vista del formulario
         return $this->render('auth/register.html.twig', [
             'form' => $form->createView(),
         ]);

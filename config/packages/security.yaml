@@ -1,0 +1,17 @@
+security:
+    # Configuración de los encoders
+    encoders:
+        App\Entity\User:  # Cambia esto por la clase de tu entidad de usuario
+            algorithm: bcrypt
+
+    # Configuración de los firewalls
+    firewalls:
+        # Este es un firewall mínimo para permitir que las solicitudes sin autenticación pasen
+        # y no tener que configurar un sistema de autenticación completo.
+        main:
+            pattern: ^/
+            security: false  # Desactiva la seguridad para todo, no es necesario autenticación
+
+    # Configuración del acceso
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }  # Permite acceso a la ruta de login sin autenticación

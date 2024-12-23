@@ -1,0 +1,69 @@
+{% extends 'includes/base.html.twig' %}
+
+{% block title %}Edit Student{% endblock %}
+
+{% block content %}
+<div class="container mt-5 bg-white border rounded p-5">
+    <h1 class="text-center mb-4">Edit Student</h1>
+
+    {{ form_start(form) }}
+
+    <div class="mb-3">
+        {{ form_label(form.name, 'Name', { 'label_attr': { 'class': 'form-label' } }) }}
+        {{ form_widget(form.name, { 'attr': { 'class': 'form-control' } }) }}
+        {% if form.name.vars.errors|length > 0 %}
+            <div class="alert alert-danger mt-2">
+                {{ form_errors(form.name) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.room, 'Room', { 'label_attr': { 'class': 'form-label' } }) }}
+        {{ form_widget(form.room, { 'attr': { 'class': 'form-control' } }) }}
+        {% if form.room.vars.errors|length > 0 %}
+            <div class="alert alert-danger mt-2">
+                {{ form_errors(form.room) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.age, 'Age', { 'label_attr': { 'class': 'form-label' } }) }}
+        {{ form_widget(form.age, { 'attr': { 'class': 'form-control' } }) }}
+        {% if form.age.vars.errors|length > 0 %}
+            <div class="alert alert-danger mt-2">
+                {{ form_errors(form.age) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.guardian, 'Guardian', { 'label_attr': { 'class': 'form-label' } }) }}
+        {{ form_widget(form.guardian, { 'attr': { 'class': 'form-control' } }) }}
+        {% if form.guardian.vars.errors|length > 0 %}
+            <div class="alert alert-danger mt-2">
+                {{ form_errors(form.guardian) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.gender, 'Gender', { 'label_attr': { 'class': 'form-label' } }) }}
+        {{ form_widget(form.gender, { 'attr': { 'class': 'form-select' } }) }}
+        {% if form.gender.vars.errors|length > 0 %}
+            <div class="alert alert-danger mt-2">
+                {{ form_errors(form.gender) }}
+            </div>
+        {% endif %}
+    </div>
+
+
+    <div class="text-center">
+        <a href="{{ path('home') }}" class="btn btn-secondary me-2">Cancel</a>
+        {{ form_widget(form.save, { 'label': 'Update student ', 'attr': { 'class': 'btn btn-primary' } }) }}
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

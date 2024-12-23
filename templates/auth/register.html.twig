@@ -3,24 +3,39 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center">Register</h1>
+    <div class="container mt-5 bg-white border rounded p-5">
+        <h1 class="text-center mb-4">Register</h1>
 
-        {{ form_start(form) }}
-        <div class="mb-3">
-            {{ form_label(form.username) }}
-            {{ form_widget(form.username) }}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+                
+                <div class="mb-3">
+                    {{ form_label(form.username, 'Username', { 'label_attr': { 'class': 'form-label' } }) }}
+                    {{ form_widget(form.username, { 'attr': { 'class': 'form-control' }, }) }}
+                    {% if form.username.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {{ form_errors(form.username) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.password, 'Password', { 'label_attr': { 'class': 'form-label' } }) }}
+                    {{ form_widget(form.password, { 'attr': { 'class': 'form-control' } }) }}
+                    {% if form.password.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {{ form_errors(form.password) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="d-grid gap-2">
+                    {{ form_row(form.register, { 'attr': { 'class': 'btn btn-primary w-100' } }) }}
+                </div>
+
+                {{ form_end(form) }}
+            </div>
         </div>
-
-        <div class="mb-3">
-            {{ form_label(form.password) }}
-            {{ form_widget(form.password) }}
-        </div>
-
-        <div class="mb-3">
-            {{ form_row(form.register) }}
-        </div>
-
-        {{ form_end(form) }}
     </div>
 {% endblock %}

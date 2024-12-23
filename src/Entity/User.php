@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`users`')]
@@ -18,9 +19,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Username cannot be empty")]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Password cannot be empty")]
     private ?string $password = null;
 
     #[ORM\Column(type: "json", nullable: true)]
@@ -68,8 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getSalt()
     {
-        // Este método puede devolverse vacío si usas un algoritmo moderno de hash (bcrypt, argon2, etc.)
-        // Los algoritmos modernos no necesitan un salt explícito.
+        // Los algoritmos modernos de hash (como bcrypt o argon2) no requieren un salt explícito.
         return null;
     }
 

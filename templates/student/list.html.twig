@@ -1,0 +1,48 @@
+{% extends 'includes/base.html.twig' %}
+
+{% block title %}Student List{% endblock %}
+
+{% block content %}
+<div class="w-75 mx-auto mt-5 bg-white border rounded p-5">
+    <h1 class="text-center mb-4 my-5 text-primary fw-bold fs-1">List of Students</h1>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ path('student_create') }}" class="btn btn-primary">Create New Student</a>
+        <a href="{{ path('student_export') }}" class="btn btn-success">Export to CSV</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Room</th>
+                <th>Guardian</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.room }}</td>
+                    <td>{{ student.guardian }}</td>
+                    <td>{{ student.age }}</td>
+                    <td>{{ student.gender }}</td>
+                    <td>{{ student.createdAt|date('Y-m-d H:i:s', 'America/Bogota') }}</td>
+                    <td>{{ student.updatedAt|date('Y-m-d H:i:s', 'America/Bogota') }}</td>
+                    <td> 
+                        <a href="{{ path('student_edit', { id: student.id }) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ path('student_delete', { id: student.id }) }}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No students found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
