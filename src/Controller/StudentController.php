@@ -18,7 +18,7 @@ class StudentController extends BaseController
 {
     protected $entityManager;
     protected $passwordHasher;
-    protected $userLogged;
+    private $userLogged;
     public function __construct(EntityManagerInterface $entityManager, SessionInterface $session)
     {
         parent::__construct($entityManager, $session);
@@ -37,11 +37,9 @@ class StudentController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $student->setCreatedBy($this->userLogged->getId());
             $this->entityManager->persist($student);
             $this->entityManager->flush();
-
-            
-
             $this->addFlash('success', 'Student created!');
 
             return $this->redirectToRoute('home');

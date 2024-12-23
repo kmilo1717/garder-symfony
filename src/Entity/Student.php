@@ -42,6 +42,9 @@ class Student
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
+    #[ORM\Column]
+    private ?int $created_by = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -144,5 +147,17 @@ class Student
     public function preUpdate()
     {
         $this->setUpdatedAt();
+    }
+
+    public function getCreatedBy(): ?int
+    {
+        return $this->created_by;
+    }
+
+    public function setCreatedBy(int $created_by): static
+    {
+        $this->created_by = $created_by;
+
+        return $this;
     }
 }
